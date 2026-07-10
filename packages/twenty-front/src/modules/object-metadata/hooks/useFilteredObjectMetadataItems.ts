@@ -9,18 +9,27 @@ export const useFilteredObjectMetadataItems = () => {
   const objectMetadataItems = objectMetadataItemsWithFields;
 
   const activeNonSystemObjectMetadataItems = useMemo(
-    () =>
-      objectMetadataItems.filter(
-        ({ isActive, isSystem }) => isActive && !isSystem,
-      ),
+    () => {
+      const allowedCoreObjects = ['company', 'person', 'opportunity', 'task', 'note'];
+      return objectMetadataItems.filter(
+        ({ isActive, isSystem, nameSingular }) =>
+          isActive && !isSystem && allowedCoreObjects.includes(nameSingular),
+      );
+    },
     [objectMetadataItems],
   );
 
   const activeObjectMetadataItems = useMemo(
-    () =>
-      objectMetadataItems
-        .filter(({ isActive }) => isActive)
-        .sort((a, b) => a.labelSingular.localeCompare(b.labelSingular)),
+    () => {
+      const allowedCoreObjects = ['company', 'person', 'opportunity', 'task', 'note'];
+      return objectMetadataItems
+        .filter(
+          ({ isActive, isSystem, nameSingular }) =>
+            isActive &&
+            (!isSystem ? allowedCoreObjects.includes(nameSingular) : true),
+        )
+        .sort((a, b) => a.labelSingular.localeCompare(b.labelSingular));
+    },
     [objectMetadataItems],
   );
 

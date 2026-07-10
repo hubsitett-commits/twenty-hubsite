@@ -9,6 +9,7 @@ import { useObjectPermissions } from '@/object-record/hooks/useObjectPermissions
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { viewsSelector } from '@/views/states/selectors/viewsSelector';
 
+import { getObjectMetadataForNavigationMenuItem } from '@/navigation-menu-item/display/object/utils/getObjectMetadataForNavigationMenuItem';
 import { useNavigationMenuItemsByFolder } from '@/navigation-menu-item/display/folder/hooks/useNavigationMenuItemsByFolder';
 import { useNavigationMenuItemsData } from './useNavigationMenuItemsData';
 import { useSortedNavigationMenuItems } from './useSortedNavigationMenuItems';
@@ -39,8 +40,34 @@ export const useNavigationMenuItemSectionItems = (): NavigationMenuItem[] => {
     includeInaccessibleObjectBackedItems: isLayoutCustomizationModeEnabled,
   });
 
-  return flattenNavigationMenuItemsWithFolderChildren(
+  const result = flattenNavigationMenuItemsWithFolderChildren(
     flatItems,
     workspaceNavigationMenuItemsByFolder,
   );
+
+  const allowedCoreObjects = ['company', 'person', 'opportunity', 'task', 'note'];
+  const allowedKeywords = ['dashboard', 'workflow'];
+
+  return result.filter((item) => {
+    if (item.type === 'FOLDER') {
+      return true;
+    }
+    if (item.type === 'LINK' || item.type === 'PAGE_LAYOUT') {
+      const targetLink = (item.link || '').toLowerCase();
+      const targetName = (item.name || '').toLowerCase();
+      return (
+        allowedKeywords.some((keyword) => targetLink.includes(keyword) || targetName.includes(keyword)) ||
+        allowedCoreObjects.some((obj) => targetLink.includes(obj) || targetName.includes(obj))
+      );
+    }
+    const objectMetadataItem = getObjectMetadataForNavigationMenuItem(
+      item,
+      objectMetadataItems,
+      views,
+    );
+    if (objectMetadataItem) {
+      return allowedCoreObjects.includes(objectMetadataItem.nameSingular);
+    }
+    return false;
+  });
 };

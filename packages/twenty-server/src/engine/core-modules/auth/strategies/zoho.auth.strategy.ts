@@ -40,8 +40,14 @@ export class ZohoStrategy extends PassportStrategy(Strategy, 'zoho') {
     super({
       authorizationURL: `${accountsUrl}/oauth/v2/auth`,
       tokenURL: `${accountsUrl}/oauth/v2/token`,
-      clientID: twentyConfigService.get('AUTH_ZOHO_CLIENT_ID'),
-      clientSecret: twentyConfigService.get('AUTH_ZOHO_CLIENT_SECRET'),
+      clientID:
+        twentyConfigService.get('AUTH_ZOHO_CLIENT_ID') ||
+        process.env.ZOHO_CLIENT_ID ||
+        '',
+      clientSecret:
+        twentyConfigService.get('AUTH_ZOHO_CLIENT_SECRET') ||
+        process.env.ZOHO_CLIENT_SECRET ||
+        '',
       callbackURL: twentyConfigService.get('AUTH_ZOHO_CALLBACK_URL'),
       scope: ['AaaServer.profile.Read'],
       passReqToCallback: true,
@@ -116,15 +122,25 @@ export class ZohoStrategy extends PassportStrategy(Strategy, 'zoho') {
     }
 
     // Whitelisted domains check
-    const emailDomain = email.split('@')[1]?.toLowerCase();
     const whitelistStr = this.twentyConfigService.get(
       'AUTH_ZOHO_ALLOWED_DOMAINS',
     );
     if (whitelistStr) {
       const allowedDomains = whitelistStr
         .split(',')
-        .map((d) => d.trim().toLowerCase());
-      if (!allowedDomains.includes(emailDomain)) {
+        .map((d) => d.trim().toLowerCase())
+        .filter(Boolean);
+
+      const regexPatterns = allowedDomains.map(
+        (domain) =>
+          new RegExp(
+            `^[^@]+@${domain.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`,
+            'i',
+          ),
+      );
+
+      const isValidDomain = regexPatterns.some((regex) => regex.test(email));
+      if (!isValidDomain) {
         throw new AuthException(
           'Email domain is not whitelisted for Zoho SSO',
           AuthExceptionCode.OAUTH_ACCESS_DENIED,
