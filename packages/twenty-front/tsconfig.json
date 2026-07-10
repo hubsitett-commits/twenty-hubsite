@@ -21,6 +21,7 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "../../.cache/tsc",
     "paths": {
+      "@/components/*": ["./src/components/*"],
       "@/*": ["./src/modules/*"],
       "~/*": ["./src/*"]
     },

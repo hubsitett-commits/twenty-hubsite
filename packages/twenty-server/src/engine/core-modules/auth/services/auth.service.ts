@@ -43,6 +43,7 @@ import { CreateSSOConnectedAccountService } from 'src/engine/core-modules/auth/s
 import { SignInUpService } from 'src/engine/core-modules/auth/services/sign-in-up.service';
 import { type GoogleRequest } from 'src/engine/core-modules/auth/strategies/google.auth.strategy';
 import { type MicrosoftRequest } from 'src/engine/core-modules/auth/strategies/microsoft.auth.strategy';
+import { type ZohoRequest } from 'src/engine/core-modules/auth/strategies/zoho.auth.strategy';
 import { AccessTokenService } from 'src/engine/core-modules/auth/token/services/access-token.service';
 import { LoginTokenService } from 'src/engine/core-modules/auth/token/services/login-token.service';
 import { RefreshTokenService } from 'src/engine/core-modules/auth/token/services/refresh-token.service';
@@ -955,8 +956,11 @@ export class AuthService {
       billingCheckoutSessionState,
       locale,
       returnToPath,
-    }: MicrosoftRequest['user'] | GoogleRequest['user'],
-    authProvider: AuthProviderEnum.Google | AuthProviderEnum.Microsoft,
+    }: MicrosoftRequest['user'] | GoogleRequest['user'] | ZohoRequest['user'],
+    authProvider:
+      | AuthProviderEnum.Google
+      | AuthProviderEnum.Microsoft
+      | AuthProviderEnum.Zoho,
   ): Promise<string> {
     const email = rawEmail.toLowerCase();
 
@@ -1091,7 +1095,8 @@ export class AuthService {
     authProvider:
       | AuthProviderEnum.Google
       | AuthProviderEnum.Microsoft
-      | AuthProviderEnum.SSO;
+      | AuthProviderEnum.SSO
+      | AuthProviderEnum.Zoho;
     oidcTokenClaims?: Record<string, unknown>;
     connectedAccountProvider?: ConnectedAccountProvider;
   }): Promise<void> {
@@ -1117,7 +1122,8 @@ export class AuthService {
     authProvider:
       | AuthProviderEnum.Google
       | AuthProviderEnum.Microsoft
-      | AuthProviderEnum.SSO,
+      | AuthProviderEnum.SSO
+      | AuthProviderEnum.Zoho,
   ): ConnectedAccountProvider {
     switch (authProvider) {
       case AuthProviderEnum.Google:
@@ -1125,6 +1131,7 @@ export class AuthService {
       case AuthProviderEnum.Microsoft:
         return ConnectedAccountProvider.MICROSOFT;
       case AuthProviderEnum.SSO:
+      case AuthProviderEnum.Zoho:
         return ConnectedAccountProvider.OIDC;
       default:
         throw new Error(

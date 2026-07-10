@@ -279,6 +279,62 @@ export class ConfigVariables {
   @ValidateIf((env) => env.AUTH_MICROSOFT_ENABLED)
   AUTH_MICROSOFT_APIS_CALLBACK_URL: string;
 
+  @ConfigVariablesMetadata({
+    group: ConfigVariablesGroup.SERVER_CONFIG,
+    description: 'Enable or disable Zoho authentication',
+    type: ConfigVariableType.BOOLEAN,
+  })
+  @IsOptional()
+  AUTH_ZOHO_ENABLED = false;
+
+  @ConfigVariablesMetadata({
+    group: ConfigVariablesGroup.SERVER_CONFIG,
+    isSensitive: false,
+    description: 'Client ID for Zoho authentication',
+    type: ConfigVariableType.STRING,
+  })
+  @ValidateIf((env) => env.AUTH_ZOHO_ENABLED)
+  AUTH_ZOHO_CLIENT_ID: string;
+
+  @ConfigVariablesMetadata({
+    group: ConfigVariablesGroup.SERVER_CONFIG,
+    isSensitive: true,
+    description: 'Client secret for Zoho authentication',
+    type: ConfigVariableType.STRING,
+  })
+  @ValidateIf((env) => env.AUTH_ZOHO_ENABLED)
+  AUTH_ZOHO_CLIENT_SECRET: string;
+
+  @ConfigVariablesMetadata({
+    group: ConfigVariablesGroup.SERVER_CONFIG,
+    isSensitive: false,
+    description: 'Callback URL for Zoho authentication',
+    type: ConfigVariableType.STRING,
+  })
+  @IsUrl({ require_tld: false, require_protocol: true })
+  @ValidateIf((env) => env.AUTH_ZOHO_ENABLED)
+  AUTH_ZOHO_CALLBACK_URL: string;
+
+  @ConfigVariablesMetadata({
+    group: ConfigVariablesGroup.SERVER_CONFIG,
+    isSensitive: false,
+    description: 'Base accounts URL for Zoho (e.g. https://accounts.zoho.com)',
+    type: ConfigVariableType.STRING,
+  })
+  @IsUrl({ require_tld: false, require_protocol: true })
+  @IsOptional()
+  AUTH_ZOHO_ACCOUNTS_URL = 'https://accounts.zoho.com';
+
+  @ConfigVariablesMetadata({
+    group: ConfigVariablesGroup.SERVER_CONFIG,
+    isSensitive: false,
+    description:
+      'Allowed domains for Zoho authentication provisioning, comma-separated',
+    type: ConfigVariableType.STRING,
+  })
+  @IsOptional()
+  AUTH_ZOHO_ALLOWED_DOMAINS = '';
+
   /**
    * @deprecated Use is now GA - record page layouts are always seeded
    */
@@ -1480,6 +1536,14 @@ export class ConfigVariables {
     type: ConfigVariableType.NUMBER,
   })
   GRAPHQL_MAX_FIELDS = 2000;
+
+  @CastToPositiveNumber()
+  @ConfigVariablesMetadata({
+    group: ConfigVariablesGroup.RATE_LIMITING,
+    description: 'Maximum depth allowed for GQL queries',
+    type: ConfigVariableType.NUMBER,
+  })
+  GRAPHQL_MAX_DEPTH = 10;
 
   @CastToPositiveNumber()
   @ConfigVariablesMetadata({

@@ -259,7 +259,7 @@ export default defineConfig(({ mode }) => {
       alias: [
         // wyw-in-js 1.x resolves modules in its CSS evaluator via vite's
         // resolve.alias (not resolve.tsconfigPaths), so the `@/` and `~/`
-        // tsconfig path aliases must be mirrored here.
+        { find: /^@\/components\//, replacement: path.resolve(__dirname, 'src/components') + '/' },
         { find: /^@\//, replacement: path.resolve(__dirname, 'src/modules') + '/' },
         { find: /^~\//, replacement: path.resolve(__dirname, 'src') + '/' },
         { find: 'path', replacement: 'rollup-plugin-node-polyfills/polyfills/path' },

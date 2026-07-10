@@ -71,6 +71,8 @@ export class GraphQLConfigService implements GqlOptionsFactory<
         maximumAllowedRootResolvers: this.twentyConfigService.get(
           'GRAPHQL_MAX_ROOT_RESOLVERS',
         ),
+        maximumAllowedNestedFields:
+          this.twentyConfigService.get('GRAPHQL_MAX_DEPTH'),
         checkDuplicateRootResolvers: true,
       }),
     ];

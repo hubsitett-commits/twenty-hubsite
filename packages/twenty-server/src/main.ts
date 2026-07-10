@@ -113,7 +113,9 @@ const bootstrap = async () => {
   httpServer.keepAliveTimeout = keepAliveTimeout;
   httpServer.headersTimeout = keepAliveTimeout + 1000;
 
-  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : twentyConfigService.get('NODE_PORT');
+  const port = process.env.PORT
+    ? parseInt(process.env.PORT, 10)
+    : twentyConfigService.get('NODE_PORT');
   await app.listen(port, '0.0.0.0');
 };
 
