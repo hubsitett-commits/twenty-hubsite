@@ -4,33 +4,22 @@ import { getWorkflowVisualizerComponentInstanceId } from '@/workflow/utils/getWo
 import { WorkflowVersionVisualizer } from '@/workflow/workflow-diagram/components/WorkflowVersionVisualizer';
 import { WorkflowVersionVisualizerEffect } from '@/workflow/workflow-diagram/components/WorkflowVersionVisualizerEffect';
 import { WorkflowVisualizerComponentInstanceContext } from '@/workflow/workflow-diagram/states/contexts/WorkflowVisualizerComponentInstanceContext';
-import { styled } from '@linaria/react';
-import { Suspense, useContext } from 'react';
+import { Suspense } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
-import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
-const StyledLoadingSkeletonContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${themeCssVariables.spacing[2]};
-  height: 100%;
-  padding: ${themeCssVariables.spacing[4]};
-  width: 100%;
-`;
 
 const LoadingSkeleton = () => {
-  const { theme } = useContext(ThemeContext);
   return (
-    <StyledLoadingSkeletonContainer>
+    <div className="flex flex-col gap-2 h-full w-full p-4">
       <SkeletonTheme
-        baseColor={theme.background.tertiary}
-        highlightColor={theme.background.transparent.lighter}
-        borderRadius={theme.border.radius.sm}
+        baseColor="#1f2937"
+        highlightColor="#374151"
+        borderRadius="4px"
       >
         <Skeleton height={SKELETON_LOADER_HEIGHT_SIZES.standard.m} />
         <Skeleton height={SKELETON_LOADER_HEIGHT_SIZES.standard.m} />
         <Skeleton height={SKELETON_LOADER_HEIGHT_SIZES.standard.m} />
       </SkeletonTheme>
-    </StyledLoadingSkeletonContainer>
+    </div>
   );
 };
 
