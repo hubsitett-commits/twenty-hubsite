@@ -1,309 +1,251 @@
 import * as React from "react";
 import { useState } from "react";
-import {
-  IconUser,
-  IconCode,
-  IconChartBar,
-  IconEye,
-  IconEyeOff,
-  IconKey,
-  IconChevronDown,
-  IconCheck,
-} from "twenty-ui/icon";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
 export const SignInUp = () => {
-  const [isLogin, setIsLogin] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [authState, setAuthState] = useState<"magic-link" | "password" | "signup">("magic-link");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const handleZohoSSO = () => {
-    // Redirect directly to backend Zoho SSO initiation route
     const serverUrl =
       process.env.REACT_APP_SERVER_BASE_URL || "http://localhost:3000";
     window.location.href = `${serverUrl}/auth/zoho`;
   };
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Local developer credentials login action
-  };
-
-  const handleSignupSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Local developer credentials signup action
+    // Local developer credentials auth actions
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 dark:bg-slate-900 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div className="flex flex-col items-center text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <IconChartBar className="h-6 w-6" />
+    <div className="flex min-h-screen items-center justify-center bg-[#0b0f19] px-4 py-12">
+      <div className="w-full max-w-[440px] rounded-[2.5rem] border border-[#27272a]/30 bg-[#161616] p-10 shadow-2xl">
+        <div className="flex flex-col items-center">
+          {/* Custom White Spinner Logo */}
+          <div className="flex h-12 w-12 items-center justify-center">
+            <svg
+              className="h-10 w-10 text-white animate-spin-slow"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <line x1="12" y1="2" x2="12" y2="5" opacity="1.0" />
+              <line x1="12" y1="19" x2="12" y2="22" opacity="0.4" />
+              <line x1="4.93" y1="4.93" x2="7.05" y2="7.05" opacity="0.9" />
+              <line x1="16.95" y1="16.95" x2="19.07" y2="19.07" opacity="0.3" />
+              <line x1="2" y1="12" x2="5" y2="12" opacity="0.8" />
+              <line x1="19" y1="12" x2="22" y2="12" opacity="0.2" />
+              <line x1="4.93" y1="19.07" x2="7.05" y2="16.95" opacity="0.7" />
+              <line x1="16.95" y1="7.05" x2="19.07" y2="4.93" opacity="0.1" />
+            </svg>
           </div>
-          <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            Twenty Monorepo
-          </h2>
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-            A secure open-source CRM architecture
-          </p>
-        </div>
 
-        {isLogin ? (
-          <Card className="border-slate-200/80 bg-white shadow-lg dark:border-slate-800 dark:bg-slate-950">
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-                Sign in
-              </CardTitle>
-              <CardDescription className="text-slate-500 dark:text-slate-400">
-                Choose your preferred login method below
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <div className="grid grid-cols-1 gap-2">
-                <Button
-                  variant="outline"
-                  onClick={handleZohoSSO}
-                  className="flex w-full items-center justify-center gap-2 border-slate-200 text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900"
-                >
-                  <IconChevronDown className="h-4 w-4 text-primary" />
-                  <span>Single sign-on (SSO) with Zoho</span>
-                </Button>
-              </div>
-
-              <div className="relative my-2">
-                <div className="absolute inset-0 flex items-center">
-                  <Separator className="w-full" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-2 text-slate-500 dark:bg-slate-950 dark:text-slate-400">
-                    or continue with
-                  </span>
-                </div>
-              </div>
-
-              <form onSubmit={handleLoginSubmit} className="space-y-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email address</Label>
-                  <div className="relative">
-                    <IconUser className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="name@company.com"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-9 border-slate-200 dark:border-slate-800"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <IconKey className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-9 pr-10 border-slate-200 dark:border-slate-800"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                    >
-                      {showPassword ? (
-                        <IconEyeOff className="h-4 w-4" />
-                      ) : (
-                        <IconEye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                <Button type="submit" className="w-full">
-                  Sign In
-                </Button>
-              </form>
-            </CardContent>
-            <CardFooter className="flex flex-col space-y-4 text-center">
-              <div className="text-sm text-slate-500 dark:text-slate-400">
-                New to Twenty?{" "}
+          {authState === "magic-link" && (
+            <>
+              <h2 className="mt-8 text-[32px] font-semibold tracking-tight text-white">
+                Welcome back!
+              </h2>
+              <p className="mt-2 text-sm text-zinc-400">
+                First time here?{" "}
                 <button
                   type="button"
-                  onClick={() => setIsLogin(false)}
-                  className="font-semibold text-primary underline-offset-4 hover:underline"
+                  onClick={() => setAuthState("signup")}
+                  className="font-medium text-white hover:underline"
                 >
-                  Create an account
+                  Sign up for free
                 </button>
-              </div>
-            </CardFooter>
-          </Card>
-        ) : (
-          <Card className="border-slate-200/80 bg-white shadow-lg dark:border-slate-800 dark:bg-slate-950">
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-                Create an account
-              </CardTitle>
-              <CardDescription className="text-slate-500 dark:text-slate-400">
-                Register a new corporate identity profile
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSignupSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="firstName">First name</Label>
-                    <Input
-                      id="firstName"
-                      type="text"
-                      placeholder="Jane"
-                      required
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="border-slate-200 dark:border-slate-800"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="lastName">Last name</Label>
-                    <Input
-                      id="lastName"
-                      type="text"
-                      placeholder="Doe"
-                      required
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="border-slate-200 dark:border-slate-800"
-                    />
-                  </div>
-                </div>
+              </p>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email address</Label>
-                  <div className="relative">
-                    <IconUser className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="jane.doe@company.com"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-9 border-slate-200 dark:border-slate-800"
-                    />
-                  </div>
-                </div>
+              <form onSubmit={handleSubmit} className="mt-8 w-full space-y-4">
+                <Input
+                  type="email"
+                  placeholder="Your email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-12 w-full rounded-xl border-zinc-800 bg-[#222222]/50 px-4 text-white placeholder-zinc-500 focus-visible:ring-zinc-700"
+                />
 
-                <div className="grid gap-2">
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <IconKey className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-9 pr-10 border-slate-200 dark:border-slate-800"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
-                    >
-                      {showPassword ? (
-                        <IconEyeOff className="h-4 w-4" />
-                      ) : (
-                        <IconEye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <div className="relative">
-                    <IconKey className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      required
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="pl-9 pr-10 border-slate-200 dark:border-slate-800"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
-                    >
-                      {showConfirmPassword ? (
-                        <IconEyeOff className="h-4 w-4" />
-                      ) : (
-                        <IconEye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="terms"
-                    checked={termsAccepted}
-                    onCheckedChange={(checked) =>
-                      setTermsAccepted(checked === true)
-                    }
-                  />
-                  <Label
-                    htmlFor="terms"
-                    className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400"
-                  >
-                    I agree to the terms and conditions
-                    <IconCheck className="h-3 w-3 text-success" />
-                  </Label>
-                </div>
-
-                <Button type="submit" className="w-full">
-                  Create Account
+                <Button
+                  type="submit"
+                  className="h-12 w-full rounded-xl bg-zinc-200 font-semibold text-zinc-950 hover:bg-zinc-300"
+                >
+                  Send me the magic link
                 </Button>
+
+                <div className="flex justify-center pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setAuthState("password")}
+                    className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+                  >
+                    Sign in using password
+                  </button>
+                </div>
               </form>
-            </CardContent>
-            <CardFooter className="flex flex-col space-y-4 text-center">
-              <div className="text-sm text-slate-500 dark:text-slate-400">
+            </>
+          )}
+
+          {authState === "password" && (
+            <>
+              <h2 className="mt-8 text-[32px] font-semibold tracking-tight text-white">
+                Welcome back!
+              </h2>
+              <p className="mt-2 text-sm text-zinc-400">
+                First time here?{" "}
+                <button
+                  type="button"
+                  onClick={() => setAuthState("signup")}
+                  className="font-medium text-white hover:underline"
+                >
+                  Sign up for free
+                </button>
+              </p>
+
+              <form onSubmit={handleSubmit} className="mt-8 w-full space-y-4">
+                <Input
+                  type="email"
+                  placeholder="Your email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-12 w-full rounded-xl border-zinc-800 bg-[#222222]/50 px-4 text-white placeholder-zinc-500 focus-visible:ring-zinc-700"
+                />
+
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="h-12 w-full rounded-xl border-zinc-800 bg-[#222222]/50 px-4 text-white placeholder-zinc-500 focus-visible:ring-zinc-700"
+                />
+
+                <Button
+                  type="submit"
+                  className="h-12 w-full rounded-xl bg-zinc-200 font-semibold text-zinc-950 hover:bg-zinc-300"
+                >
+                  Sign in
+                </Button>
+
+                <div className="flex justify-center pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setAuthState("magic-link")}
+                    className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+                  >
+                    Send me a magic link
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
+
+          {authState === "signup" && (
+            <>
+              <h2 className="mt-8 text-[32px] font-semibold tracking-tight text-white">
+                Create account
+              </h2>
+              <p className="mt-2 text-sm text-zinc-400">
                 Already have an account?{" "}
                 <button
                   type="button"
-                  onClick={() => setIsLogin(true)}
-                  className="font-semibold text-primary underline-offset-4 hover:underline"
+                  onClick={() => setAuthState("magic-link")}
+                  className="font-medium text-white hover:underline"
                 >
                   Sign in
                 </button>
-              </div>
-            </CardFooter>
-          </Card>
-        )}
+              </p>
+
+              <form onSubmit={handleSubmit} className="mt-8 w-full space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    type="text"
+                    placeholder="First name"
+                    required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="h-12 w-full rounded-xl border-zinc-800 bg-[#222222]/50 px-4 text-white placeholder-zinc-500 focus-visible:ring-zinc-700"
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Last name"
+                    required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="h-12 w-full rounded-xl border-zinc-800 bg-[#222222]/50 px-4 text-white placeholder-zinc-500 focus-visible:ring-zinc-700"
+                  />
+                </div>
+
+                <Input
+                  type="email"
+                  placeholder="Your email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-12 w-full rounded-xl border-zinc-800 bg-[#222222]/50 px-4 text-white placeholder-zinc-500 focus-visible:ring-zinc-700"
+                />
+
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="h-12 w-full rounded-xl border-zinc-800 bg-[#222222]/50 px-4 text-white placeholder-zinc-500 focus-visible:ring-zinc-700"
+                />
+
+                <Button
+                  type="submit"
+                  className="h-12 w-full rounded-xl bg-zinc-200 font-semibold text-zinc-950 hover:bg-zinc-300"
+                >
+                  Sign up
+                </Button>
+              </form>
+            </>
+          )}
+
+          {/* Separator and SSO */}
+          <div className="relative my-6 w-full">
+            <div className="absolute inset-0 flex items-center">
+              <Separator className="w-full border-zinc-800" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-[#161616] px-3 font-semibold text-zinc-500">
+                or
+              </span>
+            </div>
+          </div>
+
+          <Button
+            variant="outline"
+            onClick={handleZohoSSO}
+            className="h-12 w-full rounded-xl border border-zinc-800 bg-transparent font-semibold text-white hover:bg-zinc-900 hover:text-white"
+          >
+            Single sign-on (SSO)
+          </Button>
+
+          {/* Footer note */}
+          <p className="mt-8 text-center text-xs leading-relaxed text-zinc-500">
+            You acknowledge that you read, and agree, to <br />
+            our{" "}
+            <a href="#" className="underline hover:text-zinc-400">
+              Terms of Service
+            </a>{" "}
+            and our{" "}
+            <a href="#" className="underline hover:text-zinc-400">
+              Privacy Policy
+            </a>
+            .
+          </p>
+        </div>
       </div>
     </div>
   );
