@@ -9,7 +9,7 @@
     "start:prod": "node dist/main.js",
     "command:prod": "node dist/command/command.js",
     "worker:prod": "node dist/queue-worker/queue-worker.js",
-    "database:init:prod": "node dist/database/scripts/setup-db.js && yarn database:migrate:prod --force --include-slow",
+    "database:init:prod": "node dist/database/scripts/setup-db.js && node dist/command/command.js run-instance-commands --force --include-slow",
     "database:migrate:prod": "node dist/command/command.js run-instance-commands",
     "clickhouse:migrate:prod": "node dist/database/clickHouse/migrations/run-migrations.js",
     "typeorm": "../../node_modules/typeorm/.bin/typeorm"
