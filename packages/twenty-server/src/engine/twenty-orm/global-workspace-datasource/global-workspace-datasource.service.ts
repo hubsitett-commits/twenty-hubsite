@@ -34,7 +34,7 @@ export class GlobalWorkspaceDataSourceService
         type: 'postgres',
         logging: this.twentyConfigService.getLoggingConfig(),
         entities: [],
-        ssl: this.twentyConfigService.get('PG_SSL_ALLOW_SELF_SIGNED')
+        ssl: this.twentyConfigService.get('NODE_ENV') === 'production' || this.twentyConfigService.get('PG_SSL_ALLOW_SELF_SIGNED')
           ? {
               rejectUnauthorized: false,
             }
@@ -69,7 +69,7 @@ export class GlobalWorkspaceDataSourceService
           type: 'postgres',
           logging: this.twentyConfigService.getLoggingConfig(),
           entities: [],
-          ssl: this.twentyConfigService.get('PG_SSL_ALLOW_SELF_SIGNED')
+          ssl: this.twentyConfigService.get('NODE_ENV') === 'production' || this.twentyConfigService.get('PG_SSL_ALLOW_SELF_SIGNED')
             ? {
                 rejectUnauthorized: false,
               }

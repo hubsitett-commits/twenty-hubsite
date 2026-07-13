@@ -36,9 +36,11 @@ const getLoggingConfig = (): LogLevel[] => {
 };
 
 const isJest = process.argv.some((arg) => arg.includes('jest'));
+const pgDatabaseUrl = process.env.PG_DATABASE_URL || process.env.DATABASE_URL;
+const isProd = process.env.NODE_ENV === 'production';
 
 export const typeORMCoreModuleOptions: TypeOrmModuleOptions = {
-  url: process.env.PG_DATABASE_URL,
+  url: pgDatabaseUrl,
   type: 'postgres',
   logging: getLoggingConfig(),
   schema: 'core',
@@ -71,7 +73,7 @@ export const typeORMCoreModuleOptions: TypeOrmModuleOptions = {
           `${isJest ? 'src/' : 'dist/'}database/typeorm/core/legacy-typeorm-migrations-do-not-add/common/*{.ts,.js}`,
         ],
   ssl:
-    process.env.PG_SSL_ALLOW_SELF_SIGNED === 'true'
+    isProd || process.env.PG_SSL_ALLOW_SELF_SIGNED === 'true'
       ? {
           rejectUnauthorized: false,
         }
