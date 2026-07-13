@@ -115,10 +115,9 @@ const bootstrap = async () => {
   httpServer.keepAliveTimeout = keepAliveTimeout;
   httpServer.headersTimeout = keepAliveTimeout + 1000;
 
-  const port = process.env.PORT
-    ? parseInt(process.env.PORT, 10)
-    : twentyConfigService.get('NODE_PORT');
-  await app.listen(port, '0.0.0.0');
+ const port = process.env.PORT || 3000;
+// CRUCIAL: Must bind to '0.0.0.0' so the cloud proxy health checks pass
+await app.listen(port, '0.0.0.0');
 };
 
 void bootstrap();
