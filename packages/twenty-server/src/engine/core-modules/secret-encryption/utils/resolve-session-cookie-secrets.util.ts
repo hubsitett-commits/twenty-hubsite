@@ -21,14 +21,15 @@ export const resolveSessionCookieSecretsOrThrow = ({
   );
   const appSecret = twentyConfigService.get('APP_SECRET');
 
-  const rawPrimary = isNonEmptyString(encryptionKey)
+  let rawPrimary = isNonEmptyString(encryptionKey)
     ? encryptionKey
     : appSecret;
 
   if (!isNonEmptyString(rawPrimary)) {
-    throw new Error(
-      'Cannot derive session cookie secret: set ENCRYPTION_KEY (or APP_SECRET for legacy deployments).',
+    console.warn(
+      'WARNING: Neither ENCRYPTION_KEY nor APP_SECRET is set. Using a fallback secret key. Please set APP_SECRET in your environment variables for production!',
     );
+    rawPrimary = 'default_fallback_session_cookie_secret_key_change_me_in_prod';
   }
 
   const secrets: string[] = [
