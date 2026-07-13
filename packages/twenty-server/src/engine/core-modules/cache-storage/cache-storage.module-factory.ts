@@ -36,7 +36,8 @@ const cleanRedisUrl = (url: string) => {
 export const cacheStorageModuleFactory = (
   twentyConfigService: TwentyConfigService,
 ): CacheModuleOptions => {
-  const cacheStorageType = CacheStorageType.Redis;
+  const redisUrl = twentyConfigService.get('REDIS_URL') || process.env.REDIS_URL;
+  const cacheStorageType = redisUrl ? CacheStorageType.Redis : CacheStorageType.Memory;
   const cacheStorageTtl = twentyConfigService.get('CACHE_STORAGE_TTL');
   const cacheModuleOptions: CacheModuleOptions = {
     isGlobal: true,
@@ -44,11 +45,13 @@ export const cacheStorageModuleFactory = (
   };
 
   switch (cacheStorageType) {
-    /* case CacheStorageType.Memory: {
+    case CacheStorageType.Memory: {
+      cacheStorageLogger.log('Using in-memory cache storage');
       return cacheModuleOptions;
-    }*/
+    }
     case CacheStorageType.Redis: {
-      const redisUrl = twentyConfigService.get('REDIS_URL');
+      console.log('DEBUG: process.env.REDIS_URL is:', process.env.REDIS_URL);
+      console.log('DEBUG: twentyConfigService.get("REDIS_URL") is:', redisUrl);
 
       if (!redisUrl) {
         throw new Error(

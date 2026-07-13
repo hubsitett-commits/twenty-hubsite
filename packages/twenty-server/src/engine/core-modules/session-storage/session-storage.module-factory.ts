@@ -37,7 +37,8 @@ const cleanRedisUrl = (url: string) => {
 export const getSessionStorageOptions = (
   twentyConfigService: TwentyConfigService,
 ): session.SessionOptions => {
-  const cacheStorageType = CacheStorageType.Redis;
+  const redisUrl = twentyConfigService.get('REDIS_URL') || process.env.REDIS_URL;
+  const cacheStorageType = redisUrl ? CacheStorageType.Redis : CacheStorageType.Memory;
 
   const SERVER_URL = twentyConfigService.get('SERVER_URL');
 
@@ -61,15 +62,17 @@ export const getSessionStorageOptions = (
   };
 
   switch (cacheStorageType) {
-    /* case CacheStorageType.Memory: {
-      Logger.warn(
-        'Memory session storage is not recommended for production. Prefer Redis.',
+    case CacheStorageType.Memory: {
+      sessionStorageLogger.warn(
+        'Memory session storage is used. Prefer Redis for production.',
       );
 
       return sessionStorage;
-    }*/
+    }
     case CacheStorageType.Redis: {
-      const connectionString = twentyConfigService.get('REDIS_URL');
+      const connectionString = redisUrl;
+      console.log('DEBUG (session): process.env.REDIS_URL is:', process.env.REDIS_URL);
+      console.log('DEBUG (session): twentyConfigService.get("REDIS_URL") is:', connectionString);
 
       if (!connectionString) {
         throw new Error(
