@@ -2124,6 +2124,15 @@ export class ConfigVariables {
 }
 
 export const validate = (config: Record<string, unknown>): ConfigVariables => {
+  // Graceful fallback parsing for PG_DATABASE_URL
+  if (
+    (!config.PG_DATABASE_URL || config.PG_DATABASE_URL === '') &&
+    typeof config.DATABASE_URL === 'string' &&
+    config.DATABASE_URL.trim() !== ''
+  ) {
+    config.PG_DATABASE_URL = config.DATABASE_URL.trim();
+  }
+
   // Graceful fallback parsing for REDIS_URL
   if (typeof config.REDIS_URL === 'string' && config.REDIS_URL.trim() !== '') {
     let urlStr = config.REDIS_URL.trim();

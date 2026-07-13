@@ -13,6 +13,27 @@ const sessionStorageLogger = new Logger('SessionStorage');
 
 const REDIS_PING_INTERVAL_MS = 60_000;
 
+const cleanRedisUrl = (url: string) => {
+  try {
+    const parsed = new URL(url);
+    let database: number | undefined;
+    if (parsed.pathname && parsed.pathname !== '/') {
+      const dbStr = parsed.pathname.substring(1);
+      const dbNum = parseInt(dbStr, 10);
+      if (!isNaN(dbNum)) {
+        database = dbNum;
+      }
+      parsed.pathname = '';
+    }
+    return {
+      url: parsed.toString(),
+      database,
+    };
+  } catch {
+    return { url };
+  }
+};
+
 export const getSessionStorageOptions = (
   twentyConfigService: TwentyConfigService,
 ): session.SessionOptions => {
@@ -56,8 +77,10 @@ export const getSessionStorageOptions = (
         );
       }
 
+      const cleaned = cleanRedisUrl(connectionString);
       const redisClient = createClient({
-        url: connectionString,
+        url: cleaned.url,
+        database: cleaned.database,
         pingInterval: REDIS_PING_INTERVAL_MS,
       });
 

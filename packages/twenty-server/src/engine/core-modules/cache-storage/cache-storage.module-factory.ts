@@ -12,6 +12,27 @@ const cacheStorageLogger = new Logger('CacheStorage');
 
 const REDIS_PING_INTERVAL_MS = 60_000;
 
+const cleanRedisUrl = (url: string) => {
+  try {
+    const parsed = new URL(url);
+    let database: number | undefined;
+    if (parsed.pathname && parsed.pathname !== '/') {
+      const dbStr = parsed.pathname.substring(1);
+      const dbNum = parseInt(dbStr, 10);
+      if (!isNaN(dbNum)) {
+        database = dbNum;
+      }
+      parsed.pathname = '';
+    }
+    return {
+      url: parsed.toString(),
+      database,
+    };
+  } catch {
+    return { url };
+  }
+};
+
 export const cacheStorageModuleFactory = (
   twentyConfigService: TwentyConfigService,
 ): CacheModuleOptions => {
@@ -38,8 +59,10 @@ export const cacheStorageModuleFactory = (
       return {
         ...cacheModuleOptions,
         store: async () => {
+          const cleaned = cleanRedisUrl(redisUrl);
           const redisClient = createClient({
-            url: redisUrl,
+            url: cleaned.url,
+            database: cleaned.database,
             pingInterval: REDIS_PING_INTERVAL_MS,
           });
 
