@@ -17,5 +17,17 @@ const getDefaultUrl = () => {
   }
 };
 
-export const REACT_APP_SERVER_BASE_URL =
-  window._env_?.REACT_APP_SERVER_BASE_URL || getDefaultUrl();
+const getResolvedBaseUrl = () => {
+  let url = window._env_?.REACT_APP_SERVER_BASE_URL || getDefaultUrl();
+  if (
+    window.location.protocol === 'https:' &&
+    url.startsWith('http://') &&
+    !url.includes('localhost') &&
+    !url.includes('127.0.0.1')
+  ) {
+    url = url.replace('http://', 'https://');
+  }
+  return url;
+};
+
+export const REACT_APP_SERVER_BASE_URL = getResolvedBaseUrl();
