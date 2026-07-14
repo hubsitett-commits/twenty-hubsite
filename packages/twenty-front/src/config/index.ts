@@ -19,6 +19,15 @@ const getDefaultUrl = () => {
 
 const getResolvedBaseUrl = () => {
   let url = window._env_?.REACT_APP_SERVER_BASE_URL || getDefaultUrl();
+  
+  const isLoadedOnLocalhost =
+    window.location.hostname.endsWith('localhost') ||
+    window.location.hostname.endsWith('127.0.0.1');
+
+  if (!isLoadedOnLocalhost && (url.includes('localhost') || url.includes('127.0.0.1'))) {
+    url = getDefaultUrl();
+  }
+
   if (
     window.location.protocol === 'https:' &&
     url.startsWith('http://') &&
